@@ -3,10 +3,12 @@
 @tailwind utilities;
 
 @layer base {
-    font-family: Poppins, serif;
-    src: url("@/assets/fonts/Poppins-BoldItalic.ttf");
+    @font-face {
+        font-family: Poppins, serif;
+        src: url("@/assets/fonts/Poppins-BoldItalic.ttf");
+    }
 }
 
-html {
+main {
     font-family: Poppins, serif;
 }
