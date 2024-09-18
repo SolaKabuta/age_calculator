@@ -1,7 +1,7 @@
 <script setup lang="ts">
 //import { RouterLink, RouterView } from 'vue-router'
 
-import {ref} from "vue";
+import {computed, ref} from "vue";
 
 
 const dayData = ref('')
@@ -44,24 +44,22 @@ function handleCLick () {
 
 }
 
-function errorState () {
-  let errorMessage = ref('not valid data')
-  if (dayData.value > 31 || dayData.value < 1) {
-    return errorMessage
-  }
-}
+
+const errorMessage = computed(() => {
+  return dayData.value < 31 || dayData.value < 1 || isNaN(dayData.value);
+});
 
 </script>
 
 <template>
   <main class="bg-Off_white w-screen h-screen grid place-content-center font-bold">
-    <section class="bg-white w-[800px] h-[600px] rounded-3xl rounded-br-[30%] px-10 py-10" >
+    <section class="bg-white w-[800px] h-[600px] max-md:w-[400px] rounded-3xl rounded-br-[30%] px-10 py-10" >
       <div class="flex uppercase [&_label]:text-xs [&_div]:flex [&_div]:flex-col [&_input]:border [&_input]:border-Off_white [&_input]:px-6 [&_input]:py-2 [&_input]:my-2 [&_input]:w-3/4 [&_input]:rounded-md [&_input]:text-[32px]">
           <div>
-            <label :class="{'text-red-600' : isNaN(actualDay) && isActive,}">Day</label>
+            <label>Day</label>
             <input  class="" type="text" v-model="dayData">
             <transition name="fade">
-            <p class="text-xs text-red-600 transition duration-500 ease-out" v-if="isActive = !isActive">Must be a valid day</p>
+            <p class="text-xs text-red-600" v-if="errorMessage = !errorMessage">Must be a valid day</p>
             </transition>
           </div>
           <div>
@@ -81,7 +79,7 @@ function errorState () {
       </div>
 
       <!--RESULT-->
-      <div class="[&_p]:text-8xl [&_p_span]:text-Purple [&_p_span]:px-2 [&_p]:text-black">
+      <div class="[&_p]:text-8xl [&_p]:max-md:text-6xl [&_p_span]:text-Purple [&_p_span]:px-2 [&_p]:text-black">
       <p><span>{{ actualYear }}</span>years</p>
       <p><span>{{ actualMonth }}</span>months</p>
       <p><span>{{ actualDay }}</span>days</p>
@@ -94,9 +92,10 @@ function errorState () {
 <style scoped>
 /* Transition classes */
 .fade-enter-active, .fade-leave-active {
-  transition: opacity 1s ease-in-out;
+  transition: opacity 0.5s ease-in-out;
 }
 .fade-enter, .fade-leave-to {
+  transition: opacity 0.5s ease-in;
   opacity: 0;
 }
 </style>
