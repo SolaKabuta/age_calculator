@@ -1,7 +1,7 @@
 <script setup lang="ts">
 //import { RouterLink, RouterView } from 'vue-router'
 
-import {ref, computed} from "vue";
+import {ref} from "vue";
 
 
 const dayData = ref('')
@@ -10,30 +10,30 @@ const yearData = ref('')
 
 const now = new Date();
 const day = now.getDay(); // returns a number representing the day of the week, starting with 0 for Sunday
-const month = now.getMonth();
+const month = now.getMonth() +1;
 const year = now.getFullYear();
 console.log(`date ${day} / ${month} / ${year}`);
 
-const blank = "- -"
+const isActive = ref(false)
+
+const actualYear = ref('- -')
+const actualMonth = ref('- -')
+const actualDay = ref('- -')
 
 
-const actualYear = computed(() => {
-  const actualYear = (year - yearData.value)
+function yearCount () {
+  isActive.value = !isActive.value
+  actualYear.value = (year - yearData.value)
+  actualMonth.value = (month - monthData.value)
+  actualDay.value = (dayData.value - day)
+}
 
-  return actualYear
-})
+// function errorState () {
+//   if (isNaN(dayData.value)) {
+//     alert('test')
+//   }
+// }
 
-const actualMonth = computed(() => {
-  const actualMonth = (month - monthData.value)
-
-  return actualMonth
-})
-
-const actualDay = computed(() => {
-  const actualDay = (day - dayData.value)
-
-  return actualDay
-})
 
 </script>
 
@@ -43,29 +43,29 @@ const actualDay = computed(() => {
       <div class="flex uppercase [&_label]:text-xs [&_div]:flex [&_div]:flex-col [&_input]:border [&_input]:border-Off_white [&_input]:px-6 [&_input]:py-2 [&_input]:my-2 [&_input]:w-3/4 [&_input]:rounded-md [&_input]:text-[32px]">
           <div>
             <label>Day</label>
-            <input class="" type="text" v-model="dayData">
+            <input  class="" type="text" v-model="dayData">
           </div>
           <div>
             <label>month</label>
-            <input type="text" v-model="monthData">
+            <input type="number" v-model="monthData">
           </div>
           <div>
             <label>year</label>
-            <input type="text" v-model="yearData">
+            <input type="number" v-model="yearData">
           </div>
       </div>
 
       <!--DIVIDER-->
       <div class="flex">
         <div class="bg-Off_white w-full h-[1px] my-10"></div>
-        <button class="bg-Purple w-[90px] h-[80px] rounded-full grid place-content-center"><img src="@/assets/images/icon-arrow.svg" alt="arrow icon" width="46" height="44"></button>
+        <button @click="yearCount"  :class="{'bg-Purple' : isActive, 'bg-black' : !isActive}" class="bg-Purple w-[90px] h-[80px] rounded-full grid place-content-center"><img src="@/assets/images/icon-arrow.svg" alt="arrow icon" width="46" height="44"></button>
       </div>
 
       <!--RESULT-->
       <div class="[&_p]:text-8xl [&_p_span]:text-Purple [&_p_span]:px-2 [&_p]:text-black">
-      <p><span>{{ blank }}{{ actualYear }}</span>years</p>
-      <p><span>{{ blank }}{{ actualMonth }}</span>months</p>
-      <p><span>{{ blank }}{{ actualDay }}</span>days</p>
+      <p><span>{{ actualYear }}</span>years</p>
+      <p><span>{{ actualMonth }}</span>months</p>
+      <p><span>{{ actualDay }}</span>days</p>
       </div>
 
     </section>
